@@ -30,6 +30,7 @@ async function run() {
           await client.connect();
 
           const userCollection = client.db("homeHunterDB").collection("users");
+          const OwnerHouseCollection = client.db("homeHunterDB").collection("ownerCollections");
 
           // user api
 
@@ -64,6 +65,33 @@ async function run() {
                const result = await userCollection.insertOne(user);
                res.send(result);
           });
+
+
+          // House Owner Collections
+          app.get("/ownerCollections", async (req, res) => {
+               const result = await OwnerHouseCollection.find().toArray();
+               res.send(result);
+          });
+          app.get("/ownerCollections/:id", async (req, res) => {
+               const id = req.params.id;
+               const query = { _id: new ObjectId(id) };
+               result = await OwnerHouseCollection.findOne(query);
+               res.send(result);
+          });
+          app.post("/ownerCollections", async (req, res) => {
+               const context = req.body;
+               console.log(context);
+               const result = await OwnerHouseCollection.insertOne(context);
+               res.send(result);
+          });
+          app.delete("/ownerCollections/:id", async (req, res) => {
+               const id = req.params.id;
+               const query = { _id: new ObjectId(id) };
+               const result = await OwnerHouseCollection.deleteOne(query);
+               res.send(result);
+          });
+
+
 
           // Send a ping to confirm a successful connection
           await client.db("admin").command({ ping: 1 });

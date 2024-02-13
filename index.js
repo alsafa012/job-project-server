@@ -84,6 +84,34 @@ async function run() {
                const result = await OwnerHouseCollection.insertOne(context);
                res.send(result);
           });
+          app.put("/ownerCollections/:id", async (req, res) => {
+               const id = req.params.id;
+               const updatedInfo = req.body;
+               const filter = { _id: new ObjectId(id) };
+               const options = { upsert: true };
+               const updatedItems = {
+                    email: updatedInfo.email,
+                    name: updatedInfo.name,
+                    address: updatedInfo.address,
+                    city: updatedInfo.city,
+                    bedrooms: updatedInfo.bedrooms,
+                    bathrooms: updatedInfo.bathrooms,
+                    phone: updatedInfo.phone,
+                    roomSize: updatedInfo.roomSize,
+                    rentPerMonth: updatedInfo.rentPerMonth,
+                    availability: updatedInfo.availability,
+                    description: updatedInfo.description,
+                    image: updatedInfo.image,
+                    rentCount: updatedInfo.rentCount
+               };
+               console.log(updatedItems);
+               const result = await OwnerHouseCollection.updateOne(
+                    filter,
+                    { $set: { ...updatedItems } },
+                    options
+               );
+               res.send(result);
+          });
           app.delete("/ownerCollections/:id", async (req, res) => {
                const id = req.params.id;
                const query = { _id: new ObjectId(id) };
